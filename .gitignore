@@ -1,0 +1,8 @@
+# PyInstaller
+build/
+dist/
+*.spec
+__pycache__/
+
+# 執行檔
+*.exe
