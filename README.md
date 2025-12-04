@@ -41,8 +41,7 @@ Pre-built executable available in the `dist/` folder:
 - PyPDF2
 - tkinter (usually included with Python)
 
-## Installation from Source
-```bash
+
 
 
 
