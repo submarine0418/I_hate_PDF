@@ -484,6 +484,59 @@ class PDFMergerApp(ctk.CTk):
             self.output_entry.delete(0, "end")
             self.output_entry.insert(0, folder)
 
+    # ── 檔名輸入彈窗 ─────────────────────────────────────
+    def _ask_filename(self, default_name):
+        """彈出自訂視窗讓使用者輸入/修改檔名，預填 default_name"""
+        dialog = ctk.CTkToplevel(self)
+        dialog.title("輸出檔名")
+        dialog.geometry("460x180")
+        dialog.resizable(False, False)
+        dialog.grab_set()
+
+        result = [None]
+
+        ctk.CTkLabel(
+            dialog, text="請輸入合併後的檔案名稱：",
+            font=ctk.CTkFont(size=15)
+        ).pack(padx=20, pady=(20, 8))
+
+        entry = ctk.CTkEntry(
+            dialog, font=ctk.CTkFont(size=14), height=36, width=400
+        )
+        entry.pack(padx=20)
+        entry.insert(0, default_name)
+        entry.select_range(0, len(default_name) - 4)  # 選取檔名部分，不含 .pdf
+        entry.focus()
+
+        def on_ok(event=None):
+            result[0] = entry.get()
+            dialog.destroy()
+
+        def on_cancel():
+            dialog.destroy()
+
+        entry.bind("<Return>", on_ok)
+
+        btn_frame = ctk.CTkFrame(dialog, fg_color="transparent")
+        btn_frame.pack(pady=(14, 10))
+
+        ctk.CTkButton(
+            btn_frame, text="確認", width=100, height=36,
+            font=ctk.CTkFont(size=15, weight="bold"),
+            fg_color=SUCCESS, hover_color="#16A34A",
+            command=on_ok
+        ).pack(side="left", padx=6)
+
+        ctk.CTkButton(
+            btn_frame, text="取消", width=100, height=36,
+            font=ctk.CTkFont(size=15),
+            fg_color="#475569", hover_color="#64748B",
+            command=on_cancel
+        ).pack(side="left", padx=6)
+
+        dialog.wait_window()
+        return result[0]
+
     # ── 合併流程 ─────────────────────────────────────────
     def _start_merge(self):
         if len(self.files) < 2:
@@ -500,12 +553,28 @@ class PDFMergerApp(ctk.CTk):
                 messagebox.showerror("錯誤", f"檔案不存在：\n{fp}")
                 return
 
-        output_path = os.path.join(output_dir, "merged_output.pdf")
-        # 避免覆蓋：若已存在則加編號
-        counter = 1
-        while os.path.exists(output_path):
-            output_path = os.path.join(output_dir, f"merged_output_{counter}.pdf")
-            counter += 1
+        # 預設檔名 = 第二個檔案名_merge.pdf
+        second_name = os.path.splitext(os.path.basename(self.files[1]))[0]
+        default_name = f"{second_name}_merge.pdf"
+
+        # 彈出命名視窗
+        filename = self._ask_filename(default_name)
+        if not filename or not filename.strip():
+            return
+
+        filename = filename.strip()
+        if not filename.lower().endswith(".pdf"):
+            filename += ".pdf"
+
+        output_path = os.path.join(output_dir, filename)
+
+        if os.path.exists(output_path):
+            overwrite = messagebox.askyesno(
+                "檔案已存在",
+                f"「{filename}」已存在，是否覆蓋？"
+            )
+            if not overwrite:
+                return
 
         self.merge_btn.configure(state="disabled")
         self.status_label.configure(text="合併中…", text_color=ACCENT)
