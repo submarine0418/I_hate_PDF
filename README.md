@@ -25,6 +25,8 @@ A modern desktop application for merging multiple PDF files with per-file page s
 
 > _Run the app to see the modern dark-themed interface._
 
+![主畫面](screenshots/main.png)
+
 ## Download
 
 Pre-built executable available in the `dist/` folder:
