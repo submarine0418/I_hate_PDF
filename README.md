@@ -6,14 +6,20 @@ A modern desktop application for merging multiple PDF files with per-file page s
 ![License](https://img.shields.io/badge/License-MIT-green)
 ![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)
 
+## Download
+
+**[>>> 點此下載最新版 .exe <<<](https://github.com/submarine0418/PDFMergetool/releases/tag/v2.0.0)**
+
+> 不需要安裝 Python，下載後直接執行即可。
+
 ## Features
 
 - **Multiple file merge** — add unlimited PDF files, not just two
-- **Page selection** — choose specific pages per file (e.g. `1-3, 5, 8-10`)
+- **Page preview & selection** — click thumbnails to pick pages, no manual input needed
 - **Reorder files** — move files up/down to control merge order
-- **Modern UI** — dark/light theme with clean card-based layout (customtkinter)
+- **Modern dark UI** — clean card-based layout with customtkinter
 - **Progress indicator** — real-time progress bar during merge
-- **Custom output path** — choose where to save the merged PDF
+- **Folder output** — select output folder, auto-naming with conflict avoidance
 
 ## Screenshot
 
